@@ -28,8 +28,14 @@ def main():
     students = load_student_data("data/students.csv")
 
     for student in students:
-        avg = calculate_average(student)
-        print(f"{student['name']} average: {avg:.2f}")
+        student["avg"] = calculate_average(student)
+
+    rankers_list = sorted(students, key=lambda x: x["avg"], reverse=True)
+    print("\nTop 3 students are:")
+    for ranker in range(3):
+        student =   rankers_list[ranker]
+        print(f"{ranker+1}. {student['name']} - {student['avg']:.2f}")
 
 
-main()
+if __name__ == "__main__":
+    main()
