@@ -33,9 +33,16 @@ def main():
     rankers_list = sorted(students, key=lambda x: x["avg"], reverse=True)
     print("\nTop 3 students are:")
     for ranker in range(3):
-        student =   rankers_list[ranker]
+        student = rankers_list[ranker]
         print(f"{ranker+1}. {student['name']} - {student['avg']:.2f}")
-
+    for subject in ["math", "physics", "chemistry"]:
+        topper = None
+        marks = -1
+        for student in students:
+            if student[subject] > marks:
+                topper = student["name"]
+                marks = student[subject]
+        print(f"{subject.upper()} Topper: {topper}, Marks: {marks}")
 
 if __name__ == "__main__":
     main()
