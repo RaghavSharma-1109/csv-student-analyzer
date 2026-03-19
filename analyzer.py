@@ -23,26 +23,11 @@ def load_student_data(file_path):
 def calculate_average(student):
     return (student["math"] + student["physics"] + student["chemistry"]) / 3
 
-
-def main():
-    students = load_student_data("data/students.csv")
-
-    for student in students:
+filepath = "students.csv"
+students = load_student_data(filepath)
+for student in students:
         student["avg"] = calculate_average(student)
-
-    rankers_list = sorted(students, key=lambda x: x["avg"], reverse=True)
-    print("\nTop 3 students are:")
-    for ranker in range(3):
-        student = rankers_list[ranker]
-        print(f"{ranker+1}. {student['name']} - {student['avg']:.2f}")
-    for subject in ["math", "physics", "chemistry"]:
-        topper = None
-        marks = -1
-        for student in students:
-            if student[subject] > marks:
-                topper = student["name"]
-                marks = student[subject]
-        print(f"{subject.upper()} Topper: {topper}, Marks: {marks}")
-
-if __name__ == "__main__":
-    main()
+def get_top_n_students(students,n):
+    sorted_students = sorted(students,key=lambda x: x["avg"], reverse=True)
+    return sorted_students[:n]
+top_students = get_top_n_students(students,3)
