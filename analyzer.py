@@ -1,5 +1,4 @@
 import csv
-from os import name
 
 def load_student_data(file_path):
     students = []
@@ -39,7 +38,7 @@ def save_students_report(filename,top_students,bottom_students):
         for s in bottom_students:
             file.write(f"{s['name']} - {s['avg']:.2f}\n")
 def main():
-    students = load_student_data("students.csv")
+    students = load_student_data("data\students.csv")
 
     for student in students:
         student["avg"] = calculate_average(student)
@@ -54,8 +53,11 @@ def main():
         print(f"Bottom {i}: {s['name']} - {s['avg']:.2f}")
 
     subject = input("Enter subject (math/physics/chemistry): ").lower()
+    if subject not in ["math", "physics", "chemistry"]:
+        print("Invalid subject")
+        return
     topper = get_subject_topper(students,subject)
-    print(f"Topper of {subject}: {topper[name]} - Marks: {topper[subject]}")
+    print(f"Topper of {subject}: {topper['name']} - Marks: {topper[subject]}")
 
     save_students_report("report.txt",top_students,bottom_students)
 
