@@ -1,6 +1,5 @@
 import csv
 
-
 def load_student_data(file_path):
     students = []
 
@@ -26,10 +25,18 @@ def calculate_average(student):
 def get_bottom_n_students(students,n):
     return sorted(students, key=lambda x: x["avg"])[:n]
 def get_top_n_students(students,n):
-    sorted_students = sorted(students,key=lambda x: x["avg"], reverse=True)
+    return sorted(students,key=lambda x: x["avg"], reverse=True)
 def get_subject_topper(students,subject):
-    
-    return sorted_students[:n]
+    return max(students,key=lambda x: x[subject])
+def save_students_report(filename,top_students,bottom_students):
+    with open(filename, "w") as file:
+        file.write("Top Students: \n")
+        for s in top_students:
+            file.write(f"{s['name']} - {s['avg']:.2f}\n")
+        
+        file.write("\nBottom Students:\n")
+        for s in bottom_students:
+            file.write(f"{s['name']} - {s["avg"]:.2f}\n")
 def main():
     students = load_student_data("students.csv")
 
@@ -44,6 +51,12 @@ def main():
     bottom_students = get_bottom_n_students(students,2)
     for i, s in enumerate(bottom_students, 1):
         print(f"Bottom {i}: {s['name']} - {s['avg']:.2f}")
+    subject = input("Enter subject to Find Topper:")
+    for s in students:
+        topper = get_subject_topper(students,subject)
+        print(f"Topper of {subject}: {topper} - Marks: {s[subject]}")
+
+    save_students_report("report.txt",top_students,bottom_students)
 
 if __name__ == "__main__":
     main()
