@@ -34,6 +34,10 @@ def calculate_grade(avg):
         return 'C'
     else:
         return 'F'
+def get_result(avg):
+    if avg>=50:
+        return 'Passed'
+    return 'Failed'
 def get_bottom_n_students(students,n):
     return sorted(students, key=lambda x: x["avg"])[:n]
 def get_top_n_students(students,n):
@@ -73,6 +77,23 @@ def main():
 
     for student in students:
         student['grade'] = calculate_grade(student['avg'])
+        student['result'] = get_result(student['avg'])
+    
+    name = input("Enter name of student:").lower()
+    found = False
+    for student in students:
+        if student['name'] == name:
+            print(f"\nName: {student['name']}")
+            print("SCORECARD -->")
+            print(f"Math: {student['math']}")
+            print(f"Physics: {student['physics']}")
+            print(f"Chemistry: {student['chemistry']}")
+            print(f"Average: {student['avg']}")
+            print(f"Overall Grade: {student['grade']}")
+            found = True
+            break
+    if not found:
+        print(f"No student found with name: {name}")
 
     save_students_report("report.txt",top_students,bottom_students)
 
