@@ -21,7 +21,19 @@ def load_student_data(file_path):
 
 def calculate_average(student):
     return (student["math"] + student["physics"] + student["chemistry"]) / 3
-
+def calculate_grade(avg):
+    if avg >= 90:
+        return 'A+'
+    elif avg >= 80:
+        return 'A'
+    elif avg >= 70:
+        return 'B+'
+    elif avg >= 60:
+        return 'B'
+    elif avg >= 50:
+        return 'C'
+    else:
+        return 'F'
 def get_bottom_n_students(students,n):
     return sorted(students, key=lambda x: x["avg"])[:n]
 def get_top_n_students(students,n):
@@ -58,6 +70,9 @@ def main():
         return
     topper = get_subject_topper(students,subject)
     print(f"Topper of {subject}: {topper['name']} - Marks: {topper[subject]}")
+
+    for student in students:
+        student['grade'] = calculate_grade(student['avg'])
 
     save_students_report("report.txt",top_students,bottom_students)
 
