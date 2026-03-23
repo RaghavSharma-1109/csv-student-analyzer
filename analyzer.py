@@ -88,8 +88,9 @@ def main():
             print(f"Math: {student['math']}")
             print(f"Physics: {student['physics']}")
             print(f"Chemistry: {student['chemistry']}")
-            print(f"Average: {student['avg']}")
-            print(f"Overall Grade: {student['grade']}")
+            print(f"Average: {student['avg']:.2f}")
+            print(f"Grade: {student['grade']}")
+            print(f"Result: {student['result']}")
             found = True
             break
     if not found:
