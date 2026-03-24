@@ -44,10 +44,10 @@ def get_subject_topper(students,subject):
 def save_students_report(filename,students):
     with open(filename, "w") as file:
         
-        file.write(f"{'Name':<10}  {'Avg':>8}  {'Grade':<6}  {'Result':<8}\n")
+        file.write(f"{'Name':<8}  {'Avg':>8}  {'Grade':<6}  {'Result':<8}\n")
         file.write(f"-"*38)
         for student in students:
-            file.write(f"\n{student['name']:<10}  {(student['avg']):>8.2f}  {student['grade']:<6}  {student['result']:<8}\n")
+            file.write(f"\n{student['name']:<8}  {(student['avg']):>8.2f}  {student['grade']:<6}  {student['result']:<8}")
         
 def main():
     students = load_student_data("data\students.csv")
