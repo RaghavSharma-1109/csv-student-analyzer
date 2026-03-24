@@ -20,7 +20,8 @@ def load_student_data(file_path):
 
 
 def calculate_average(student):
-    return (student["math"] + student["physics"] + student["chemistry"]) / 3
+    avg = ((student["math"] + student["physics"] + student["chemistry"]) / 3)
+    return avg
 def calculate_grade(avg):
     if avg >= 90:
         return 'A+'
@@ -38,35 +39,21 @@ def get_result(avg):
     if avg>=50:
         return 'Passed'
     return 'Failed'
-def get_bottom_n_students(students,n):
-    return sorted(students, key=lambda x: x["avg"])[:n]
-def get_top_n_students(students,n):
-    return sorted(students,key=lambda x: x["avg"], reverse=True)[:n]
 def get_subject_topper(students,subject):
     return max(students,key=lambda x: x[subject])
-def save_students_report(filename,top_students,bottom_students):
+def save_students_report(filename,students):
     with open(filename, "w") as file:
-        file.write("Top Students: \n")
-        for s in top_students:
-            file.write(f"{s['name']} - {s['avg']:.2f}\n")
         
-        file.write("\nBottom Students:\n")
-        for s in bottom_students:
-            file.write(f"{s['name']} - {s['avg']:.2f}\n")
+        file.write(f"{'Name':<10}  {'Avg':>8}  {'Grade':<6}  {'Result':<8}\n")
+        file.write(f"-"*38)
+        for student in students:
+            file.write(f"\n{student['name']:<10}  {(student['avg']):>8.2f}  {student['grade']:<6}  {student['result']:<8}\n")
+        
 def main():
     students = load_student_data("data\students.csv")
 
     for student in students:
         student["avg"] = calculate_average(student)
-
-    top_students = get_top_n_students(students, 3)
-
-    for i, s in enumerate(top_students, 1):
-        print(f"{i}. {s['name']} - {s['avg']:.2f}")
-    
-    bottom_students = get_bottom_n_students(students,2)
-    for i, s in enumerate(bottom_students, 1):
-        print(f"Bottom {i}: {s['name']} - {s['avg']:.2f}")
 
     subject = input("Enter subject (math/physics/chemistry): ").lower()
     if subject not in ["math", "physics", "chemistry"]:
@@ -82,7 +69,7 @@ def main():
     name = input("Enter name of student:").lower()
     found = False
     for student in students:
-        if student['name'] == name:
+        if student['name'].lower() == name:
             print(f"\nName: {student['name']}")
             print("SCORECARD -->")
             print(f"Math: {student['math']}")
@@ -96,7 +83,7 @@ def main():
     if not found:
         print(f"No student found with name: {name}")
 
-    save_students_report("report.txt",top_students,bottom_students)
+    save_students_report("report.txt",students)
 
 if __name__ == "__main__":
     main()
