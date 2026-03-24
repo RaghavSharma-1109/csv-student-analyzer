@@ -55,12 +55,6 @@ def main():
     for student in students:
         student["avg"] = calculate_average(student)
 
-    subject = input("Enter subject (math/physics/chemistry): ").lower()
-    if subject not in ["math", "physics", "chemistry"]:
-        print("Invalid subject")
-        return
-    topper = get_subject_topper(students,subject)
-    print(f"Topper of {subject}: {topper['name']} - Marks: {topper[subject]}")
 
     for student in students:
         student['grade'] = calculate_grade(student['avg'])
@@ -82,6 +76,13 @@ def main():
             break
     if not found:
         print(f"No student found with name: {name}")
+        
+    subject = input("Enter subject (math/physics/chemistry): ").lower()
+    if subject not in ["math", "physics", "chemistry"]:
+        print("Invalid subject")
+        return
+    topper = get_subject_topper(students,subject)
+    print(f"Topper of {subject}: {topper['name']} - Marks: {topper[subject]}")
 
     save_students_report("report.txt",students)
 
