@@ -58,7 +58,7 @@ class StudentAnalyzer:
             student['result'] = self.get_result(avg)
     def search_student(self):
         name = input("Enter student name:")
-        found = 0
+        found = False
         for student in self.students:
             if student['name'].lower() == name.lower():
                 print(f"Name: {name}\n")
@@ -68,7 +68,7 @@ class StudentAnalyzer:
                 print(f"Average: {student['avg']}")
                 print(f"Grade: {student['grade']}")
                 print(f"Result: {student['result']}")
-                found = 1
+                found = True
         if not found:
             print("Student Not Found!")
     def show_topper(self):
