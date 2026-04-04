@@ -1,90 +1,99 @@
 import csv
+class DataTypeError(Exception):
+    pass
+class InvalidEntry(Exception):
+    pass
+class StudentAnalyzer:
+    def __init__(self,filepath) -> None:
+        self.file_path = filepath
+        self.students = []
+    def load_student_data(self):
+        try:
+            with open(self.file_path,'r') as file:
+                    
+                reader = csv.DictReader(file)
 
-def load_student_data(file_path):
-    students = []
+                for row in reader:
+                    student = {
+                        "name": row["Name"],
+                        "math": int(row["Math"]),
+                        "physics": int(row["Physics"]),
+                        "chemistry": int(row["Chemistry"])
+                    }
 
-    with open(file_path, 'r') as file:
-        reader = csv.DictReader(file)
+                    self.students.append(student)
 
-        for row in reader:
-            student = {
-                "name": row["Name"],
-                "math": int(row["Math"]),
-                "physics": int(row["Physics"]),
-                "chemistry": int(row["Chemistry"])
-            }
-
-            students.append(student)
-
-    return students
+            return self.students
+        except FileNotFoundError:
+            raise FileNotFoundError('CSV file not found. Check path.')
 
 
-def calculate_average(student):
-    avg = ((student["math"] + student["physics"] + student["chemistry"]) / 3)
-    return avg
-def calculate_grade(avg):
-    if avg >= 90:
-        return 'A+'
-    elif avg >= 80:
-        return 'A'
-    elif avg >= 70:
-        return 'B+'
-    elif avg >= 60:
-        return 'B'
-    elif avg >= 50:
-        return 'C'
-    else:
-        return 'F'
-def get_result(avg):
-    if avg>=50:
-        return 'Passed'
-    return 'Failed'
-def get_subject_topper(students,subject):
-    return max(students,key=lambda x: x[subject])
-def save_students_report(filename,students):
-    with open(filename, "w") as file:
+    def calculate_average(self,student):
+        avg = ((student["math"] + student["physics"] + student["chemistry"]) / 3)
+        return avg
+    def calculate_grade(self,avg):
+        if avg >= 90:
+            return 'A+'
+        elif avg >= 80:
+            return 'A'
+        elif avg >= 70:
+            return 'B+'
+        elif avg >= 60:
+            return 'B'
+        elif avg >= 50:
+            return 'C'
+        else:
+            return 'F'
+    def get_result(self,avg):
+        if avg>=50:
+            return 'Passed'
+        return 'Failed'
+    def get_subject_topper(self,subject):
+        return max(self.students,key=lambda x: x[subject])
+    def process_students(self):
+        for student in self.students:
+            avg = self.calculate_average(student)
+            student['avg'] = avg
+            student['grade'] = self.calculate_grade(avg)
+            student['result'] = self.get_result(avg)
+    def search_student(self):
+        name = input("Enter student name:")
+        found = 0
+        for student in self.students:
+            if student['name'].lower() == name.lower():
+                print(f"Name: {name}\n")
+                print(f"SUBJECTS ->\n")
+                for subject in student:
+                    if subject != 'name':
+                        print(f"{subject} = {student[subject]}")
+                print(f"Average: {student['avg']}")
+                print(f"Grade: {student['grade']}")
+                print(f"Result: {student['result']}")
+    def save_students_report(self):
+        with open(self.filename, "w") as file:
         
-        file.write(f"{'Name':<8}  {'Avg':>8}  {'Grade':<6}  {'Result':<8}\n")
-        file.write(f"-"*38)
-        for student in students:
-            file.write(f"\n{student['name']:<8}  {(student['avg']):>8.2f}  {student['grade']:<6}  {student['result']:<8}")
-        
-def main():
-    students = load_student_data("data\students.csv")
+            file.write(f"{'Name':<8}  {'Avg':>8}  {'Grade':<6}  {'Result':<8}\n")
+            file.write(f"-"*38)
+            for student in self.students:
+                file.write(f"\n{student['name']:<8}  {(student['avg']):>8.2f}  {student['grade']:<6}  {student['result']:<8}")
+            
+    def main(self):
+        while True:
+            print("\n1.Search Student")
+            print("2. Show Topper")
+            print("3. Generate Report")
+            print("4.Exit")
 
-    for student in students:
-        student["avg"] = calculate_average(student)
-
-
-    for student in students:
-        student['grade'] = calculate_grade(student['avg'])
-        student['result'] = get_result(student['avg'])
-    
-    name = input("Enter name of student:").lower()
-    found = False
-    for student in students:
-        if student['name'].lower() == name:
-            print(f"\nName: {student['name']}")
-            print("SCORECARD -->")
-            print(f"Math: {student['math']}")
-            print(f"Physics: {student['physics']}")
-            print(f"Chemistry: {student['chemistry']}")
-            print(f"Average: {student['avg']:.2f}")
-            print(f"Grade: {student['grade']}")
-            print(f"Result: {student['result']}")
-            found = True
-            break
-    if not found:
-        print(f"No student found with name: {name}")
-        
-    subject = input("Enter subject (math/physics/chemistry): ").lower()
-    if subject not in ["math", "physics", "chemistry"]:
-        print("Invalid subject")
-        return
-    topper = get_subject_topper(students,subject)
-    print(f"Topper of {subject}: {topper['name']} - Marks: {topper[subject]}")
-
-    save_students_report("report.txt",students)
-
-if __name__ == "__main__":
-    main()
+            choice = input("Enter choice:")
+            if choice == '1':
+                self.search_student()
+            elif choice == '2':
+                self.show_topper()
+            elif choice == '3':
+                self.save_students_report("report.txt", self.students)
+            elif choice == '4':
+                break
+            else:
+                print("Invalid Choice")
+    if __name__ == "__main__":
+        main()
