@@ -69,8 +69,11 @@ class StudentAnalyzer:
                 print(f"Average: {student['avg']}")
                 print(f"Grade: {student['grade']}")
                 print(f"Result: {student['result']}")
-    def save_students_report(self):
-        with open(self.filename, "w") as file:
+                found = 1
+        if not found:
+            print("Student Not Found!")
+    def save_students_report(self,filename):
+        with open(filename, "w") as file:
         
             file.write(f"{'Name':<8}  {'Avg':>8}  {'Grade':<6}  {'Result':<8}\n")
             file.write(f"-"*38)
