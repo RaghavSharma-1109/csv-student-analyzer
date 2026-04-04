@@ -63,15 +63,24 @@ class StudentAnalyzer:
             if student['name'].lower() == name.lower():
                 print(f"Name: {name}\n")
                 print(f"SUBJECTS ->\n")
-                for subject in student:
-                    if subject != 'name':
-                        print(f"{subject} = {student[subject]}")
+                for subject in ['math', 'physics', 'chemistry']:
+                    print(f"-{subject} = {student[subject]}")
                 print(f"Average: {student['avg']}")
                 print(f"Grade: {student['grade']}")
                 print(f"Result: {student['result']}")
                 found = 1
         if not found:
             print("Student Not Found!")
+    def show_topper(self):
+        topper = None
+        topper_avg = float('-inf')
+        for student in self.students:
+            if student['avg']>topper_avg:
+                topper = student
+                topper_avg = student['avg']
+        print(f"Topper: {topper['name']}")
+        print(f"Score: {topper_avg}")
+
     def save_students_report(self,filename):
         with open(filename, "w") as file:
         
@@ -93,10 +102,13 @@ class StudentAnalyzer:
             elif choice == '2':
                 self.show_topper()
             elif choice == '3':
-                self.save_students_report("report.txt", self.students)
+                self.save_students_report("report.txt")
             elif choice == '4':
                 break
             else:
                 print("Invalid Choice")
     if __name__ == "__main__":
-        main()
+        analyzer = StudentAnalyzer("data/students.csv")
+        analyzer.load_student_data()
+        analyzer.process_students()
+        analyzer.main()
