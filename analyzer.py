@@ -3,10 +3,12 @@ class DataTypeError(Exception):
     pass
 class InvalidEntry(Exception):
     pass
-class StudentAnalyzer:
+class FileHandler:
     def __init__(self,filepath) -> None:
         self.file_path = filepath
         self.students = []
+        if self.file_path is None:
+            raise InvalidEntry('Invalid Filepath!')
     def load_student_data(self):
         try:
             with open(self.file_path,'r') as file:
@@ -27,7 +29,7 @@ class StudentAnalyzer:
         except FileNotFoundError:
             raise FileNotFoundError('CSV file not found. Check path.')
 
-
+class StudentAnalyzer:
     def calculate_average(self,student):
         avg = ((student["math"] + student["physics"] + student["chemistry"]) / 3)
         return avg
