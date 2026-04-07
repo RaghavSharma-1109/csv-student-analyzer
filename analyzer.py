@@ -1,4 +1,5 @@
 import csv
+from sqlite3.dbapi2 import PARSE_COLNAMES
 class DataTypeError(Exception):
     pass
 class InvalidEntry(Exception):
@@ -30,7 +31,45 @@ class FileHandler:
             return self.data
         except FileNotFoundError:
             raise FileNotFoundError('CSV file not found. Check path.')
-    
+class DataValidator:
+    def validator(self,data):
+        self.data = []
+        new_data = {}
+
+        for newdata in data:
+            name = newdata.get('name')
+            if not name:
+                continue
+            name = name.strip().lower()
+            try: 
+                math = int(newdata.get('math'))
+                if math<0 or math>100:
+                    print("Math marks outside range")
+                    continue
+            except ValueError:
+                continue
+            try: 
+                phy = int(newdata.get('physics'))
+                if phy<0 or phy>100:
+                    print("Physics score outside range")
+                    continue
+            except ValueError:
+                continue
+            try:
+                chem = int(newdata.get('chemistry'))
+                if chem<0 or chem>100:
+                    print("Chemistry marks outside range")
+                    continue
+            except ValueError:
+                continue
+            new_data = {
+                'name': name,
+                'math': math,
+                'physics': phy,
+                'chemistry': chem
+            }
+            self.data.append(new_data)
+        return self.data
 class StudentAnalyzer:
     def calculate_average(self,student):
         avg = ((student["math"] + student["physics"] + student["chemistry"]) / 3)
@@ -112,7 +151,7 @@ class StudentAnalyzer:
             else:
                 print("Invalid Choice")
     if __name__ == "__main__":
-        analyzer = StudentAnalyzer("data/students.csv")
-        analyzer.load_student_data()
-        analyzer.process_students()
-        analyzer.main()
+        # analyzer = StudentAnalyzer("data/students.csv")
+        # analyzer.load_student_data()
+        # analyzer.process_students()
+        # analyzer.main()
