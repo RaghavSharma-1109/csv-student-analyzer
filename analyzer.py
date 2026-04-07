@@ -5,30 +5,32 @@ class InvalidEntry(Exception):
     pass
 class FileHandler:
     def __init__(self,filepath) -> None:
+        if not filepath:
+            raise ValueError('Invalid Filepath!')
         self.file_path = filepath
-        self.students = []
-        if self.file_path is None:
-            raise InvalidEntry('Invalid Filepath!')
+    required_columns = {'Name', 'Math', 'Physics', 'Chemistry'}
     def load_student_data(self):
+        self.data = []
         try:
             with open(self.file_path,'r') as file:
                     
                 reader = csv.DictReader(file)
-
+                if not self.required_columns.issubset(reader.fieldnames):
+                    raise ValueError('CSV missing required columns')
                 for row in reader:
                     student = {
                         "name": row["Name"],
-                        "math": int(row["Math"]),
-                        "physics": int(row["Physics"]),
-                        "chemistry": int(row["Chemistry"])
+                        "math": row["Math"],
+                        "physics": row["Physics"],
+                        "chemistry":row["Chemistry"]
                     }
 
-                    self.students.append(student)
+                    self.data.append(student)
 
-            return self.students
+            return self.data
         except FileNotFoundError:
             raise FileNotFoundError('CSV file not found. Check path.')
-
+    
 class StudentAnalyzer:
     def calculate_average(self,student):
         avg = ((student["math"] + student["physics"] + student["chemistry"]) / 3)
