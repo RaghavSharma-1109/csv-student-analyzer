@@ -34,41 +34,28 @@ class FileHandler:
 class DataValidator:
     def validator(self,data):
         self.data = []
-        new_data = {}
 
         for newdata in data:
+            new_data = {}
+            error = False
             name = newdata.get('name')
             if not name:
                 continue
             name = name.strip().lower()
-            try: 
-                math = int(newdata.get('math'))
-                if math<0 or math>100:
-                    print("Math marks outside range")
-                    continue
-            except ValueError:
-                continue
-            try: 
-                phy = int(newdata.get('physics'))
-                if phy<0 or phy>100:
-                    print("Physics score outside range")
-                    continue
-            except ValueError:
-                continue
-            try:
-                chem = int(newdata.get('chemistry'))
-                if chem<0 or chem>100:
-                    print("Chemistry marks outside range")
-                    continue
-            except ValueError:
-                continue
-            new_data = {
-                'name': name,
-                'math': math,
-                'physics': phy,
-                'chemistry': chem
-            }
-            self.data.append(new_data)
+            new_data['name'] = name
+            subjects = ['math', 'physics', 'chemistry']
+            for subject in subjects:
+                try:
+                    score = int(newdata.get(subject))
+                    if score<0 or score>100:
+                        error = True
+                        break
+                    new_data[subject] = score
+                except (ValueError, TypeError):
+                    error = True
+                    break
+            if not error:
+                self.data.append(new_data)
         return self.data
 class StudentAnalyzer:
     def calculate_average(self,student):
