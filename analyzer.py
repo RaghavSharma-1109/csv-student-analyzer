@@ -59,16 +59,36 @@ cleaned_data = data.validator()
 class StudentAnalyzer:
     def __init__(self, data) -> None:
         self.students = data
-    is_processed = True
-    def process_student(self):
-        for student in self.students:
-            total , count = 0
-            for subject in ['math', 'physics', 'chemistry']:
-                total+=self.students[subject]
-                count +=1
-            avg = total/count
-            student['avg'] = avg
-        
+        self.is_processed = False
+    def process_students(self):
+        if not self.is_processed:
+            for student in self.students:
+                total =0
+                count = 0
+                for subject in ['math', 'physics', 'chemistry']:
+                    total+=student[subject]
+                    count +=1
+                avg = total/count
+                student['avg'] = avg
+                if avg>=90:
+                    student['grade'] = 'A+'
+                elif avg>=80:
+                    student['grade'] = 'A'
+                elif avg>=70:
+                    student['grade'] = 'B+'
+                elif avg>=60:
+                    student['grade'] = 'B'
+                elif avg>=50:
+                    student['grade'] = 'C'
+                else:
+                    student['grade'] = 'F'
+
+                if avg>=50:
+                    student['result'] = 'Passed'
+                else:
+                    student['result'] = 'Failed'
+            self.is_processed = True
+            
 
     def main(self):
         while True:
