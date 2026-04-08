@@ -58,7 +58,18 @@ data = DataValidator(raw_data)
 cleaned_data = data.validator()
 class StudentAnalyzer:
     def __init__(self, data) -> None:
-        self.cleaned_data = data
+        self.students = data
+    is_processed = True
+    def process_student(self):
+        for student in self.students:
+            total , count = 0
+            for subject in ['math', 'physics', 'chemistry']:
+                total+=self.students[subject]
+                count +=1
+            avg = total/count
+            student['avg'] = avg
+        
+
     def main(self):
         while True:
             print("\n1.Search Student")
