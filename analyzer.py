@@ -88,7 +88,17 @@ class StudentAnalyzer:
                 else:
                     student['result'] = 'Failed'
             self.is_processed = True
-            
+    def get_topper(self):
+        if self.is_processed:
+            topper = None
+            topper_score = float('-inf')
+            for student in self.students:
+                if topper_score<student['avg']:
+                    topper_score = student['avg']
+                    topper = student
+            return topper
+        else:
+            return f"Students not processed"
 
     def main(self):
         while True:
