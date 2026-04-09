@@ -89,16 +89,13 @@ class StudentAnalyzer:
                     student['result'] = 'Failed'
             self.is_processed = True
     def get_topper(self):
+        if not self.students:
+            return f"No data available"
         if self.is_processed:
-            topper = None
-            topper_score = float('-inf')
-            for student in self.students:
-                if topper_score<student['avg']:
-                    topper_score = student['avg']
-                    topper = student
+            topper = max(self.students, key=lambda student :student['avg'])
             return topper
-        else:
-            return f"Students not processed"
+        if not self.is_processed:
+            return f"Student data not processed. Call process_students() first "
 
     def main(self):
         while True:
