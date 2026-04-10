@@ -96,27 +96,38 @@ class StudentAnalyzer:
             return topper
         if not self.is_processed:
             return f"Student data not processed. Call process_students() first "
+    def get_subject_topper(self,subject):
+        if not self.students:
+            return f"No data available"
+        if not self.is_processed:
+            return f"Student data not processed. Call process_students() first "
+        valid_subjects = ['math', 'physics', 'chemistry']
+        subject = subject.lower()
+        if subject not in valid_subjects:
+            return "Invalid subject. Choose from: math, physics, chemistry"
+        subject_topper = max(self.students, key=lambda student: student[subject])
+        return subject_topper
+    def search_student(self,name):
+        if not isinstance(name,str):
+            return 'Enter valid student name'
+        name = name.lower().strip()
+        if not self.is_processed:
+            return "Student data not processed. Call process_students() first "
+        found_students = [] 
+        for student in self.students:
+            if name == student['name']:
+                found_students.append(student)
+        if not found_students:
+            return []
+        return found_students
+def main(analyzer):
 
-    def main(self):
-        while True:
-            print("\n1.Search Student")
-            print("2. Show Topper")
-            print("3. Generate Report")
-            print("4.Exit")
 
-            choice = input("Enter choice:")
-            if choice == '1':
-                self.search_student()
-            elif choice == '2':
-                self.show_topper()
-            elif choice == '3':
-                self.save_students_report("report.txt")
-            elif choice == '4':
-                break
-            else:
-                print("Invalid Choice")
-    if __name__ == "__main__":
-        # analyzer = StudentAnalyzer("data/students.csv")
-        # analyzer.load_student_data()
-        # analyzer.process_students()
-        # analyzer.main()
+if __name__ == "__main__":
+    file1 = FileHandler('students.csv')
+    raw_data = file1.load_student_data()
+    data = DataValidator(raw_data)
+    cleaned_data = data.validator()
+    analyzer = StudentAnalyzer(cleaned_data)
+    analyzer.process_students()
+    main(analyzer)
