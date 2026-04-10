@@ -109,6 +109,13 @@ Overall Score: 94.33
 * Practical use of Python for real-world data processing
 
 ---
+## 📸 Sample Output
+
+### 🔍 Search Student
+![Search](assets/search.png)
+
+### 🏆 Topper
+![Topper](assets/topper.png)
 
 ## 📌 Author
 
