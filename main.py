@@ -74,7 +74,7 @@ class StudentAnalyzer:
                 for subject in SUBJECTS:
                     total+=student[subject]
                     count +=1
-                avg = total/count
+                avg = round(total/count,2)
                 student['avg'] = avg
                 if avg>=90:
                     student['grade'] = 'A+'
@@ -122,9 +122,9 @@ class StudentAnalyzer:
         return found_students
 def main(analyzer):
     while(True):
-        choice = (input("Select option: \n1. Search Student \n2. Show Topper \n3. Subject Topper \n4. Exit"))
+        choice = (input("Select option: \n1. Search Student \n2. Show Topper \n3. Subject Topper \n4. Exit\n"))
         if choice == '1':
-            name = input("Enter Student name")
+            name = input("Enter Student name: ")
             result = analyzer.search_student(name)
             if result is None:
                 print("Invalid input or data not processed.")
