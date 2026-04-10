@@ -1,3 +1,14 @@
+import csv
+SUBJECTS = ['math', 'physics', 'chemistry']
+def print_student(student:dict):
+    print(f"Name: {student['name']} ")
+    print(f"Maths Score: {student['math']} ")
+    print(f"Physics Score: {student['physics']} ")
+    print(f"Chemistry Score: {student['chemistry']}")
+    print(f"Overall Score: {student['avg']} ")
+    print(f"Grade: {student['grade']} ")
+    print(f"Result: {student['result']} ")
+    print('-----------------')
 class FileHandler:
     def __init__(self,filepath) -> None:
         if not filepath:
@@ -38,8 +49,7 @@ class DataValidator:
                 continue
             name = name.strip().lower()
             new_data['name'] = name
-            subjects = ['math', 'physics', 'chemistry']
-            for subject in subjects:
+            for subject in SUBJECTS:
                 try:
                     score = int(newdata.get(subject))
                     if score<0 or score>100:
@@ -52,10 +62,6 @@ class DataValidator:
             if not error:
                 self.cleaned_data.append(new_data)
         return self.cleaned_data
-file1 = FileHandler('students.csv')
-raw_data = file1.load_student_data()
-data = DataValidator(raw_data)
-cleaned_data = data.validator()
 class StudentAnalyzer:
     def __init__(self, data) -> None:
         self.students = data
@@ -65,7 +71,7 @@ class StudentAnalyzer:
             for student in self.students:
                 total =0
                 count = 0
-                for subject in ['math', 'physics', 'chemistry']:
+                for subject in SUBJECTS:
                     total+=student[subject]
                     count +=1
                 avg = total/count
@@ -89,30 +95,24 @@ class StudentAnalyzer:
                     student['result'] = 'Failed'
             self.is_processed = True
     def get_topper(self):
-        if not self.students:
-            return f"No data available"
-        if self.is_processed:
-            topper = max(self.students, key=lambda student :student['avg'])
-            return topper
-        if not self.is_processed:
-            return f"Student data not processed. Call process_students() first "
+        if not self.students or not self.is_processed:
+            return None
+        topper = max(self.students, key=lambda student :student['avg'])
+        return topper
     def get_subject_topper(self,subject):
-        if not self.students:
-            return f"No data available"
-        if not self.is_processed:
-            return f"Student data not processed. Call process_students() first "
-        valid_subjects = ['math', 'physics', 'chemistry']
+        if not self.students or not self.is_processed:
+            return None
         subject = subject.lower()
-        if subject not in valid_subjects:
-            return "Invalid subject. Choose from: math, physics, chemistry"
+        if subject not in SUBJECTS:
+            return None
         subject_topper = max(self.students, key=lambda student: student[subject])
         return subject_topper
     def search_student(self,name):
         if not isinstance(name,str):
-            return 'Enter valid student name'
+            return None
         name = name.lower().strip()
         if not self.is_processed:
-            return "Student data not processed. Call process_students() first "
+            return None
         found_students = [] 
         for student in self.students:
             if name == student['name']:
@@ -121,8 +121,38 @@ class StudentAnalyzer:
             return []
         return found_students
 def main(analyzer):
-
-
+    while(True):
+        choice = (input("Select option: \n1. Search Student \n2. Show Topper \n3. Subject Topper \n4. Exit"))
+        if choice == '1':
+            name = input("Enter Student name")
+            result = analyzer.search_student(name)
+            if result is None:
+                print("Invalid input or data not processed.")
+                continue
+            for student in result :
+                print_student(student)
+            continue
+        elif choice == '2':
+            topper = analyzer.get_topper()
+            if topper is None:
+                print("No topper available. Ensure data is loaded and processed.")
+                continue
+            print(f"Topper of This section is ---\n")
+            print_student(topper)
+            continue
+        elif choice =='3':
+            subject = input("Enter subject to find topper (Math/Chemistry/physics):")
+            topper = analyzer.get_subject_topper(subject)
+            if topper is None:
+                print("Unable to find subject topper. Check subject or data.")
+                continue
+            print_student(topper)
+            continue
+        elif choice == '4':
+            break
+        else:
+            print("Invalid choice. Please select a valid option.")
+            
 if __name__ == "__main__":
     file1 = FileHandler('students.csv')
     raw_data = file1.load_student_data()
